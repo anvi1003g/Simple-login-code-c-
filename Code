@@ -1,0 +1,131 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+class sign {
+
+	std::string username, email, password;
+	std::string serarchname, searchpass, searchemail;
+	std::fstream file;
+
+public:
+	void login();
+	void signUP();
+	void forgot();
+
+} obj;
+
+int main() {
+	char choice;
+	std::cout << "\n1- Login";
+	std::cout << "\n2- Sign-Up";
+	std::cout << "\n3-Forgot";
+	std::cout << "\n4-Exit";
+	std::cout << "Enter your choice: ";
+	std::cin >> choice;
+
+
+	switch (choice) {
+	case '1':
+		std::cin.ignore();
+		obj.login();
+	break;
+
+	case'2':
+		std::cin.ignore();
+		obj.signUP();
+	break;
+
+	case '3':
+		std::cin.ignore();
+		obj.forgot();
+	break;
+
+	case '4':
+		return 0;
+	break;
+
+	default:
+		std::cout << "Invalid selection";
+
+	}
+}
+
+void sign::signUP() {
+	std::cout << "\n Enter your Username: ";
+	std::getline(std::cin, username);
+	std::cout << "\n Enter your Email Adress: ";
+	std::getline(std::cin, email);
+	std::cout << "\n Enter Your Password:  ";
+	std::getline(std::cin, password);
+	
+	file.open("loginData.txt", std::ios::out | std::ios::app);
+	file << username << "*" << email << "*" << password << std::endl;
+	file.close();
+}
+
+void sign::login() {
+	std::cout << "-----------LOGIN-----------" << std::endl;
+	std::cout << "Enter your User Name: " << std::endl;
+	std::getline(std::cin, serarchname);
+
+	std::cout << "Enter your Password: " << std::endl;
+	std::getline(std::cin, searchpass);
+
+	file.open("loginData.txt", std::ios::in);
+	std::getline(file, username, '*');
+	std::getline(file, email, '*');
+	std::getline(file, password, '\n');
+	while (!file.eof()) {
+		if (username == serarchname) {
+			if (password == searchpass) {
+				std::cout << "\nAccount Login Successfull";
+				std::cout << "\nUsername: " << username << std::endl;
+				std::cout << "\nEmail: " << email << std::endl;
+
+			}
+			else {
+				std::cout << "Pasword is incorrect";
+			}
+		}
+
+		std::getline(file, username, '*');
+		std::getline(file, password, '*');
+		std::getline(file, email, '*');
+	}
+	file.close();
+}
+
+
+void sign::forgot() {
+	std::cout << "\nEnter your UserName: ";
+	std::getline(std::cin, serarchname);
+	std::cout << "\nEnter your email: ";
+	std::getline(std::cin, searchemail);
+
+	file.open("LoginData.txt", std::ios::in);
+	std::getline(file, username, '*');
+	std::getline(file, email, '*');
+	std::getline(file, password, '\n');
+
+	while (!file.eof()) {
+		if (username == serarchname) {
+			if (email == searchemail) {
+				std::cout << "\nAccount found";
+				std::cout << "Your Password:: " << password << std::endl;
+
+			}
+			else {
+				std::cout << "Not found\n";
+			}
+		}
+		else {
+			std::cout << "\nNot found\n";
+		}
+
+		std::getline(file, username,'*');
+		std::getline(file, email, '*');
+		std::getline(file, password, '\n');
+	}
+	file.close();
+
+}
